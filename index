@@ -1,0 +1,87 @@
+#include <iostream>
+#include <clocale>
+
+using namespace std;
+
+struct Personagem{
+    string nome;
+    int vida;
+    int ataque;
+    int defesa;
+
+    void insere(string stnome, int stvida, int stataque, int stdefesa){
+        nome = stnome;
+        vida = stvida;
+        ataque = stataque;
+        defesa = stdefesa;
+    };
+};
+
+struct Inimigo{
+    string nome;
+    int vida;
+    int ataque;
+    int defesa;
+
+    void insere_inimigo(string stnome, int stvida, int stataque, int stdefesa){
+        nome = stnome;
+        vida = stvida;
+        ataque = stataque;
+        defesa = stdefesa;
+    };
+
+};
+
+
+void combate(Personagem &MC, Inimigo &Zumbi) { //Pàssando struct como referencia
+    MC.vida -= (Zumbi.ataque - MC.defesa);
+    Zumbi.vida -= (MC.ataque - Zumbi.defesa);
+    if (MC.vida < 0) {
+        MC.vida = 0;
+    }
+    if(Zumbi.vida <= 0){
+        Zumbi.vida = 0;
+    }
+}
+
+int main(){
+
+    string nome;
+    bool lutando = false;
+
+    cout << "Insira seu nome: " << endl;
+    getline(cin, nome);
+    system("cls");
+    
+    Personagem MC;
+    Inimigo Zumbi;
+    MC.insere(nome, 100, 50, 10);
+
+    do{
+        cout << MC.nome << "  " << MC.vida << endl;
+
+        if(!lutando){
+        lutando = true;
+        Zumbi.insere_inimigo("Zumbi", 100, 20, 10);
+        }
+
+        cout << endl << endl;
+        cout << Zumbi.vida << "  " << Zumbi. ataque << endl;
+
+        if(Zumbi.vida <= 0){
+            Inimigo Zumbi;
+            lutando = false;
+        }
+
+        system("pause");
+        system("cls");
+
+        combate(MC, Zumbi);
+
+
+    }while(MC.vida>0);
+
+    cout << MC.nome << " foi derrotado!" << endl;
+
+    return 0;
+}
