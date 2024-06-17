@@ -1,87 +1,150 @@
 #include <iostream>
-#include <clocale>
+#include <locale>
 
 using namespace std;
 
-struct Personagem{
+struct Personagem {
+    string nome;
+    int vida;
+    int ataque;
+
+    void insere(string stnome, int stvida, int stataque) {
+        nome = stnome;
+        vida = stvida;
+        ataque = stataque;
+    }
+};
+
+struct Inimigo {
     string nome;
     int vida;
     int ataque;
     int defesa;
 
-    void insere(string stnome, int stvida, int stataque, int stdefesa){
+    void insere(string stnome, int stvida, int stataque) {
         nome = stnome;
         vida = stvida;
         ataque = stataque;
-        defesa = stdefesa;
-    };
+    }
 };
 
-struct Inimigo{
-    string nome;
-    int vida;
-    int ataque;
-    int defesa;
+void combate(Personagem &MC, Inimigo &Zumbi) { // Fazer função de combate 
 
-    void insere_inimigo(string stnome, int stvida, int stataque, int stdefesa){
-        nome = stnome;
-        vida = stvida;
-        ataque = stataque;
-        defesa = stdefesa;
-    };
-
-};
-
-
-void combate(Personagem &MC, Inimigo &Zumbi) { //Pàssando struct como referencia
-    MC.vida -= (Zumbi.ataque - MC.defesa);
-    Zumbi.vida -= (MC.ataque - Zumbi.defesa);
-    if (MC.vida < 0) {
-        MC.vida = 0;
-    }
-    if(Zumbi.vida <= 0){
-        Zumbi.vida = 0;
-    }
-}
-
-int main(){
-
-    string nome;
-    bool lutando = false;
-
-    cout << "Insira seu nome: " << endl;
-    getline(cin, nome);
     system("cls");
-    
-    Personagem MC;
-    Inimigo Zumbi;
-    MC.insere(nome, 100, 50, 10);
 
-    do{
-        cout << MC.nome << "  " << MC.vida << endl;
+    int resp;
+    int turno = 1;
+    int potions = 5;
 
-        if(!lutando){
-        lutando = true;
-        Zumbi.insere_inimigo("Zumbi", 100, 20, 10);
-        }
+    while(MC.vida > 0 && Zumbi.vida > 0){
 
-        cout << endl << endl;
-        cout << Zumbi.vida << "  " << Zumbi. ataque << endl;
-
-        if(Zumbi.vida <= 0){
-            Inimigo Zumbi;
-            lutando = false;
-        }
+        cout << "Turno: " << turno << endl << endl;
 
         system("pause");
         system("cls");
 
-        combate(MC, Zumbi);
+        cout << "Vida: " << MC.vida << "                    " << Zumbi.vida << " " << Zumbi.nome << endl;
+        cout <<"Potions x" << potions << endl << endl;
+
+        
+        cout << "O que deseja fazer?" << endl << "1. Atacar" << endl << "2. Defender" << endl << "3. Usar poção" << endl;
+        cin >> resp;
+
+        do{
+            if(resp == 1){
+                Zumbi.vida = Zumbi.vida - MC.ataque;
+            }
+            if(resp == 2){
+                cout << "Você começa arma um bloqueio.";
+            }
+            if(resp == 3){
+                if(potions > 0){MC.vida = 100;}
+                else{cout << "Você não tem mais poções." << endl;}
+            }
+
+        }while (resp < 0 || resp > 3);
+
+        system("pause");
+        system("cls");
+
+        if(Zumbi.vida > 0){
+        cout << Zumbi.nome << " turn" << endl;
+
+        MC.vida = MC.vida - Zumbi.ataque;
+
+        system("pause");
+        system("cls");
+        }
 
 
-    }while(MC.vida>0);
+        turno++;
+    }
 
-    cout << MC.nome << " foi derrotado!" << endl;
+
+}
+
+int main() {
+
+    setlocale(LC_ALL, "");
+
+    cout << "Bem vindo a arena dos zumbis, você enfrentará três combates contra poderosos inimigos." << endl;
+    cout << "Tome esta arma e essas poções, use-as com sabedoria." << endl;
+
+    system("pause");
+    system("cls");
+
+    cout << "Você recebeu ARMA" << endl;
+    cout << "Você recebeu 5x POTIONS" << endl;
+    
+    system("pause");
+    system("cls");
+
+    string nome;
+    int inimigos = 3;
+
+    cout << "Qual o seu nome? " << endl;
+    cin >> nome;
+
+    system("cls");
+    cout << "Entrando na arena!" << endl;
+    system("pause");
+
+    Personagem MC;
+    MC.insere(nome, 100, 100);
+
+    while(inimigos > 0 || MC.vida > 0){
+
+        if(inimigos == 3){
+            Inimigo Zumbi;
+            Zumbi.insere("Zumbi", 100, 20);
+            inimigos--;
+            combate(MC, Zumbi);
+        }
+
+        else if(inimigos == 2){
+            Inimigo Zumbi;
+            Zumbi.insere("fastZombie", 150, 35);
+            inimigos--;
+            combate(MC, Zumbi);
+        }
+
+        else if(inimigos == 1){
+            Inimigo Zumbi;
+            Zumbi.insere("Detonator", 300, 40);
+            inimigos--;
+            combate(MC, Zumbi);
+        }
+
+
+
+    }
+
+    if(MC.vida <= 0 ){
+        cout << "You died!" << endl;
+    }
+    else{
+        cout << "Parabéns!" << endl;
+    }
 
     return 0;
 }
